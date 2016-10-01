@@ -1,8 +1,8 @@
 #myCanvas {
-  border: 1px solid black;
-  background-color:white;
+  border: 2px solid red;
+  background-color:black;
   padding: 0;
-    margin: auto;
+  margin: auto;
     display: block;
     top: 0;
     position: absolute;
