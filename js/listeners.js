@@ -1,0 +1,81 @@
+function addListeners(inputStates, canvas){
+//add the listener to the main, window object, and update the states
+  window.addEventListener('keydown', function(event){
+    if (event.keyCode === 37) {
+      inputStates.left = true;
+    } else if (event.keyCode === 38) {
+      inputStates.up = true;
+    } else if (event.keyCode === 39) {
+      inputStates.right = true;
+    } else if (event.keyCode === 40) {
+      inputStates.down = true;
+    }  else if (event.keyCode === 32) {
+      inputStates.space = true;
+    } else if (event.keyCode === 78) { // N key for New Game
+      inputStates.keyN = true;
+    } else if (event.keyCode === 72) { // H key for High Scores
+      inputStates.keyH = true;
+    } else if (event.keyCode === 82) { // R key for Rules
+      inputStates.keyR = true;
+    } else if (event.keyCode === 67) { // C key for Credits
+      inputStates.keyC = true;
+    } else if (event.keyCode === 66) { // B key for Back
+      inputStates.keyB = true;
+    } else if (event.keyCode === 71) { // G key for Go to
+      inputStates.keyG = true;
+    }
+  }, false);
+
+  //if the key will be released, change the states object 
+  window.addEventListener('keyup', function(event){
+    if (event.keyCode === 37) {
+      inputStates.left = false;
+    } else if (event.keyCode === 38) {
+      inputStates.up = false;
+    } else if (event.keyCode === 39) {
+      inputStates.right = false;
+    } else if (event.keyCode === 40) {
+      inputStates.down = false;
+    } else if (event.keyCode === 32) {
+      inputStates.space = false;
+    } else if (event.keyCode === 78) { // N key for New Game
+      inputStates.keyN = false;
+    } else if (event.keyCode === 72) { // H key for High Scores
+      inputStates.keyH = false;
+    } else if (event.keyCode === 82) { // R key for Rules
+      inputStates.keyR = false;
+    } else if (event.keyCode === 67) { // C key for Credits
+      inputStates.keyC = false;
+    } else if (event.keyCode === 66) { // B key for Back
+      inputStates.keyB = false;
+    } else if (event.keyCode === 71) { // G key for Go to
+      inputStates.keyG = false;
+    }
+  }, false);
+        
+  // Mouse event listeners
+  canvas.addEventListener('mousemove', function (evt) {
+    inputStates.mousePos = getMousePos(evt,canvas);
+  }, false);
+
+  canvas.addEventListener('mousedown', function (evt) {
+    inputStates.mousedown = true;
+    inputStates.mouseButton = evt.button;
+  }, false);
+
+  canvas.addEventListener('mouseup', function (evt) {
+    inputStates.mousedown = false;
+  }, false);
+
+}
+
+function getMousePos(evt,canvas) {
+  // necessary to take into account CSS boudaries
+  var rect = canvas.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  };
+}
+
+      

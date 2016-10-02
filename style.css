@@ -12,7 +12,7 @@
 }
 
 html {
-  background-image: url(img/bg.png);
+  background-image: url(assets/images/bg.png);
   background-position: center bottom;
   background-repeat: no-repeat;
   height: 100%;
