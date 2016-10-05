@@ -1,10 +1,19 @@
+function randomBall(){
+  var i = Math.floor(7*Math.random());
+  var ballsrc = "assets/images/bean"+i+".png";
+  return ballsrc;
+}
 
   // constructor function for balls
-  function Ball(w,h) {
-   this.v = 2;
+  function Ball(w,h,ctx) {
+   this.v = 4;
    this.boundingCircleRadius = 30/2;
-   this.color = "white";
+   this.color = "black";
    this.dead = false;
+   this.image = new Image();
+   this.image.src= randomBall();
+   //console.log(this.image.src);
+    
 
   /*
           0
@@ -18,8 +27,8 @@
 
 
           */
-          var cote = Math.floor(4*Math.random());
-          if (cote === 0){
+    var cote = Math.floor(4*Math.random());
+      if (cote === 0){
       // Côté Haut
       this.x = Math.random()*w;
       this.y = 0;
@@ -54,8 +63,8 @@
       var dy = h/2-this.y;
       this.angle = Math.atan2(dy,dx);
     }
-    console.log("x: " +this.x);
-    console.log("Y: " +this.y);
+    //console.log("x: " +this.x);
+    //console.log("Y: " +this.y);
 
 
     
@@ -66,10 +75,10 @@
       ctx.save();
       ctx.beginPath();
       ctx.fillStyle = this.color;
-      ctx.arc(this.x, this.y, this.boundingCircleRadius, 0, 2*Math.PI);
+      //ctx.arc(this.x, this.y, this.boundingCircleRadius, 0, 2*Math.PI);
       ctx.fill();
+      ctx.drawImage(this.image,this.x-15, this.y-15);
       ctx.restore();
-
       //ctx.fillText("Ball : (x: " + this.x + ",y: " + this.y +")", 10, 580);
       this.color = 'white';
     };
@@ -81,5 +90,7 @@
       this.x += this.v * Math.cos(this.angle);
       this.y += this.v * Math.sin(this.angle);
     };
+
+
 
   }

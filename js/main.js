@@ -1,3 +1,5 @@
+
+
 var mousepos = {x:0, y:0};
 // Inits
 window.onload = function init() {
@@ -23,7 +25,7 @@ var GF = function(){
     startMenu : 0,
     play : 1,
     gameOver : 2,
-    highScores: 3,
+    //highScores: 3,
     rules: 4,
     credits: 5
   };
@@ -89,22 +91,28 @@ var GF = function(){
   // Functions for drawing the eater and maybe other objects
   function drawMyEater() {
     // save the context
+    
     ctx.save();
     ctx.translate( eater.x, eater.y );
     ctx.rotate( eater.angle );
-    
+    frogImage = new Image();
+    frogImage.src="assets/images/frog.png";
     // Draw bounding circle
+    ctx.beginPath();
+    ctx.strokeStyle = "red";
+    ctx.arc(0, 0, eater.boundingCircleRadius, 0, 2*Math.PI, true);
+    ctx.lineWidth = 5;
+    ctx.stroke();
     ctx.beginPath();
     negAngle = -(eater.hole/2)*Math.PI/180;
     posAngle = (eater.hole/2)*Math.PI/180;
     var dx = w - h/2;                                         
     var dy = w/2 - h/2;
     angleDebutMonstre = Math.atan2(dy,dx)*Math.PI/180;
+    ctx.drawImage(frogImage,-80, -80, 160, 160);
+    ctx.strokeStyle = "green";
     ctx.arc(0, 0, eater.boundingCircleRadius, negAngle, posAngle, true);
     ctx.lineWidth = 5;
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.lineTo(0,300);
     ctx.stroke();
     // restore the context
     ctx.restore(); 
@@ -116,25 +124,25 @@ var GF = function(){
     clearCanvas();
     // check inputStates
     if (inputStates.left) {
-      ctx.fillText("left", 150, 20);
+      //ctx.fillText("left", 150, 20);
     }
     if (inputStates.up) {
-      ctx.fillText("up", 150, 40);
+      //ctx.fillText("up", 150, 40);
     }
     if (inputStates.right) {
-      ctx.fillText("right", 150, 60);
+      //ctx.fillText("right", 150, 60);
     }
     if (inputStates.down) {
-    ctx.fillText("down", 150, 80);
+    //ctx.fillText("down", 150, 80);
     } 
     if (inputStates.space) {
-      ctx.fillText("space bar", 140, 100);
+      //ctx.fillText("space bar", 140, 100);
     }
     if (inputStates.keyN) {
-      ctx.fillText("n pressed", 140, 100);
+      //ctx.fillText("n pressed", 140, 100);
     }
     if (inputStates.keyG) {
-      ctx.fillText("G pressed", 140, 100);
+      //ctx.fillText("G pressed", 140, 100);
     }
     if (inputStates.mousePos) { 
       mousepos.x = inputStates.mousePos.x;
@@ -142,7 +150,7 @@ var GF = function(){
       //ctx.fillText("mouse(x = " + inputStates.mousePos.x + " y = " + inputStates.mousePos.y +")", 370, 580);
     }
     if (inputStates.mousedown) { 
-      ctx.fillText("mousedown b" + inputStates.mouseButton, 5, 180);
+      //ctx.fillText("mousedown b" + inputStates.mouseButton, 5, 180);
     }
     if(eater.dead) {
       currentState = states.gameOver;
@@ -155,18 +163,28 @@ var GF = function(){
       case states.startMenu:
         ctx.fillStyle = "red";
         ctx.font = "80px Consolas";
-        ctx.fillText("吃 豆 豆", 130, 120);
+        var textString = "吃 豆 豆";
+        textWidth = ctx.measureText(textString).width;
+        ctx.fillText(textString, w/2 - textWidth/2, 120);
         ctx.font = "40px Consolas";
-        ctx.fillText("(N)ew Game", 180, 220);
-        ctx.fillText("(H)igh Scores", 150, 300);
-        ctx.fillText("(R)ules", 220, 380);
-        ctx.fillText("(C)redits", 200, 460);
+        var textString = "(N)ew Game";
+        textWidth = ctx.measureText(textString).width;
+        ctx.fillText(textString, w/2 - textWidth/2, 250);
+        //var textString = "(H)igh Scores";
+        //textWidth = ctx.measureText(textString).width;
+        //ctx.fillText("(H)igh Scores", 150, 300);
+        var textString = "(R)ules";
+        textWidth = ctx.measureText(textString).width;
+        ctx.fillText(textString, w/2 - textWidth/2, 350);
+        var textString = "(C)redits";
+        textWidth = ctx.measureText(textString).width;
+        ctx.fillText(textString, w/2 - textWidth/2, 450);
         ctx.font = "15px Consolas";
         ctx.fillText("Developed By SEYCHA Sénthène & LUDOT Florian.", 10, 590);
         if(inputStates.keyN) {
           currentState = states.play;
         } else if(inputStates.keyH) {
-          currentState = states.highScores;
+          //currentState = states.highScores;
         } else if(inputStates.keyR) {
           currentState = states.rules;
         } else if(inputStates.keyC) {
@@ -218,18 +236,38 @@ var GF = function(){
       case states.rules:
           ctx.fillStyle = "red";
           ctx.font = "60px Consolas";
-          ctx.fillText("RULES", 210, 120);
+          var textString = "RULES";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 120);
           ctx.font = "20px Consolas";
-          ctx.fillText("吃 豆 豆 (Chi Dou Dou) is a little game where you", 10, 200);
-          ctx.fillText("have to rotate the central creature with the mouse", 10, 225);
-          ctx.fillText("to eat all the beans which will come through it. ", 10, 250);
-          ctx.fillText("If you grabe a bean with the creature's mouth,", 10, 300);
-          ctx.fillText("you score 1 point.", 10, 325);
-          ctx.fillText("However, if the bean hit another part of the", 10, 350);
-          ctx.fillText("creature except the creature's mouth ... GAME OVER!", 10, 375);
-          ctx.fillText("Have fun and don't miss the beans !! :)", 90, 450);
+          var textString = "吃 豆 豆 (Chi Dou Dou) is a little game where you";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 200);
+          var textString = "have to rotate the central creature with the mouse";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 225);
+          var textString = "to eat all the beans which will come through it.";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 250);
+          var textString = "If you grabe a bean with the creature's mouth,";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 300);
+          var textString = "you score 1 point.";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 325);
+          var textString = "However, if the bean hit another part of the";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 350);
+          var textString = "creature except the creature's mouth ... GAME OVER!";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 375);
+          var textString = "Have fun and don't miss the beans !! :)";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 450);
           ctx.font = "30px Consolas";
-          ctx.fillText("(B)ack To Main Menu", 130, 520);
+          var textString = "(B)ack To Main Menu";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 520);
           if(inputStates.keyB) {
             currentState = states.startMenu;
           } 
@@ -241,16 +279,32 @@ var GF = function(){
         case states.credits:
           ctx.fillStyle = "red";
           ctx.font = "60px Consolas";
-          ctx.fillText("CREDITS", 170, 120);
+          var textString = "CREDITS";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 120);
           ctx.font = "20px Consolas";
-          ctx.fillText("吃 豆 豆 (Chi Dou Dou) is a little game developed", 10, 200);
-          ctx.fillText("in Javascript by SEYCHA Sénthène and LUDOT Florian.", 10, 225);
-          ctx.fillText("This game have been made thanks to BUFFA Michel's", 10, 275);
-          ctx.fillText("Game Framework.", 10, 300);
-          ctx.fillText("The Backgound image copyright belong to ", 10, 350);
-          ctx.fillText("respective owner.", 10, 375);  
+          var textString = "吃 豆 豆 (Chi Dou Dou) is a little game developed";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 200);
+          var textString = "in Javascript by SEYCHA Sénthène and LUDOT Florian.";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 225);
+          var textString = "This game have been made thanks to BUFFA Michel's";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 275);
+          var textString = "Game Framework.";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 300);
+          var textString = "The Backgound image copyright belong to";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 350);
+          var textString = "respective owner.";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 375);  
           ctx.font = "30px Consolas";
-          ctx.fillText("(B)ack To Main Menu", 130, 460);
+          var textString = "(B)ack To Main Menu";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 460);
           if(inputStates.keyB) {
             currentState = states.startMenu;
           } 
@@ -265,24 +319,35 @@ var GF = function(){
           eater.dead=false;
           ctx.fillStyle = "red";
           ctx.font = "60px Consolas";
-          ctx.fillText("GAME OVER", 140, 120);
+          var textString = "GAME OVER";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 120);
           ctx.font = "35px Consolas";
-          ctx.fillText("YOUR SCORE : " +currentScore, 140, 170);
-          ctx.fillText("YOUR HIGH SCORE : 689", 90, 210);  
+          var textString = "YOUR SCORE : " +currentScore;
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 200);
+          //ctx.fillText("YOUR HIGH SCORE : 689", 90, 210);  
           ctx.font = "30px Consolas";
-          ctx.fillText("(N)ew Game", 200, 350);
-          ctx.fillText("(H)igh Scores", 180, 400);
-          ctx.fillText("(G)o To Main Menu", 150, 450);
+          var textString = "(N)ew Game";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 350);
+          //var textString = "GAME OVER";
+        //textWidth = ctx.measureText(textString).width;
+          //ctx.fillText("(H)igh Scores", 180, 400);
+          var textString = "(G)o To Main Menu";
+          textWidth = ctx.measureText(textString).width;
+          ctx.fillText(textString, w/2 - textWidth/2, 450);
           if(inputStates.keyN) {
             currentScore = 0;
             ballArray = [];
             createBalls(1);
             currentState = states.play;
           } else if(inputStates.keyH) {
-            currentState = states.highScores;
+            //currentState = states.highScores;
           } else if(inputStates.keyG) {
             currentState = states.startMenu;
           } 
+          ctx.font = "15px Consolas";
         break;
         //////////////////////////////////////////////////////////
     }
@@ -357,8 +422,8 @@ var GF = function(){
   }
 
   function checkCollisions(ball) {
-    ctx.font = "15px Consolas";
-    /*ctx.fillText("angleDebutMonstre :" +angleDebutMonstre, 10, 320);
+    /*ctx.font = "15px Consolas";
+    ctx.fillText("angleDebutMonstre :" +angleDebutMonstre, 10, 320);
     ctx.fillText("negAngle : " + negAngle * (180 / Math.PI)+"°", 10, 340);
     ctx.fillText("posAngle : " + posAngle * (180 / Math.PI)+"°", 10, 360);
     ctx.fillText("collisionSourisMonstre : " +collisionSourisMonstre(player, eater.x, eater.y) +"°", 10, 380);
@@ -366,6 +431,8 @@ var GF = function(){
     var v1 = collisionSourisMonstre(player, eater.x, eater.y) + (posAngle*(180 / Math.PI));
     var v2 = collisionMonstreBalle(ball, eater.x, eater.y) + (negAngle*(180 / Math.PI));
     var v3 = Math.abs(collisionSourisMonstre(player, eater.x, eater.y) + (posAngle*(180 / Math.PI))-collisionMonstreBalle(ball, eater.x, eater.y) + (negAngle*(180 / Math.PI)));
+    //var v3 = collisionSourisMonstre(player, eater.x, eater.y) + (posAngle*(180 / Math.PI))-collisionMonstreBalle(ball, eater.x, eater.y) + (negAngle*(180 / Math.PI));
+
     /*ctx.fillText("collisionSourisMonstre+posAngle: " + v1 +"°", 10, 420);
     ctx.fillText("collisionMonstreBalle+negAngle : " + v2 +"°", 10, 440);
     ctx.fillText("dif angle :" +v3, 10, 200);
@@ -375,12 +442,13 @@ var GF = function(){
     ctx.fillText("eater.x : " +eater.x, 10, 520);
     ctx.fillText("eater.y : " +eater.y, 10, 540);
     ctx.fillText("eater.boundingCircleRadius : " +eater.boundingCircleRadius, 10, 560);*/
-    ctx.fillText("SCORE: " +currentScore, 400, 20);
+  ctx.font = "15px Consolas";
+    ctx.fillText("SCORE: " +currentScore, 500, 20);
 
     if(circleCollide(ball.x, ball.y, ball.boundingCircleRadius, eater.x, eater.y, eater.boundingCircleRadius)) {
       //ctx.fillText("Collision", 10, 20);
       ctx.strokeStyle = ctx.fillStyle = 'red';
-      if (v3<=13){
+      if (v3<= 193 && v3 >=167){
         ctx.strokeStyle = ctx.fillStyle = 'green';
         //ctx.fillText("BINGO", 10, 40);
         eatingSound = new sound("assets/sounds/eatingSound.mp3");
@@ -418,9 +486,8 @@ var GF = function(){
       // Create a ball with random position and speed. 
       // You can change the radius
         if (i===0){
-          var ball =  new Ball(w,h);
-          beanPopSound = new sound("assets/sounds/beanPopSound.wav");
-          beanPopSound.play();
+          var ball =  new Ball(w,h,ctx);
+          
         }
         if(!circleCollide(ball.x, ball.y, ball.boundingCircleRadius,eater.x, eater.y, eater.boundingCircleRadius)) {
           // On la rajoute au tableau

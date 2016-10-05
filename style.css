@@ -23,3 +23,7 @@ html {
 .fps{
   color: white;
 }
+
+.hide{
+  display: none;
+}

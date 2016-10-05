@@ -4,9 +4,9 @@ function collisionSourisMonstre(player, eaterx, eatery) {
   if (dx>0 && dy>=0){
     var angle = Math.atan2(dy,dx);
   } else if (dx>0 && dy<0){
-    var angle = Math.atan2(dy,dx)+(2*Math.PI);
+    var angle = Math.atan2(dy,dx);
   } else if (dx<0){
-    var angle = Math.atan2(dy,dx)+Math.PI;
+    var angle = Math.atan2(dy,dx);
   } else if (dx==0 && dy>0){
     var angle = Math.PI/2;
   } else if (dx==0 && dy<0){
@@ -21,9 +21,9 @@ function collisionMonstreBalle(balle, eaterx, eatery) {
   if (dx>0 && dy>=0){
     var angle = Math.atan2(dy,dx);
   } else if (dx>0 && dy<0){
-    var angle = Math.atan2(dy,dx)+(2*Math.PI);
+    var angle = Math.atan2(dy,dx);
   } else if (dx<0){
-    var angle = Math.atan2(dy,dx)+Math.PI;
+    var angle = Math.atan2(dy,dx);
   } else if (dx==0 && dy>0){
     var angle = Math.PI/2;
   } else if (dx==0 && dy<0){
