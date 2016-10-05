@@ -1,4 +1,4 @@
-
+// version 0.2
 
 var mousepos = {x:0, y:0};
 // Inits
@@ -60,6 +60,12 @@ var GF = function(){
 
   // initialization of the score
   currentScore = 0;
+  
+    // frame updating count
+  compteurFrame = 0;
+  
+  // Ball frequence 
+  frequenceBalles =200;
 
   // vars for handling inputs
   var inputStates = {};
@@ -70,7 +76,7 @@ var GF = function(){
     y: 0,
     speed:100, // pixels/s this time !
     boundingCircleRadius: 80,
-    hole: 40,
+    hole: 50,
     angle:0
   };
 
@@ -203,7 +209,9 @@ var GF = function(){
         delta = timer(time);
         drawMyEater();
         updatePlayer();
-      
+        ctx.fillStyle = "white";
+      ctx.font = "15px Consolas";
+    ctx.fillText("SCORE: " +currentScore, 500, 20);
         // Check inputs and move the eater
         updateEaterPosition(delta);
 
@@ -340,7 +348,8 @@ var GF = function(){
           if(inputStates.keyN) {
             currentScore = 0;
             ballArray = [];
-            createBalls(1);
+      frequenceBalles =200;
+            lancerBalles();
             currentState = states.play;
           } else if(inputStates.keyH) {
             //currentState = states.highScores;
@@ -390,7 +399,10 @@ var GF = function(){
   }
 
   function updateBalls(delta) {
+    
+     compteurFrame ++;
   // for each ball in the array
+    lancerBalles();
     for(var i=0; i < ballArray.length; i++) {
       var ball = ballArray[i];
       // 1) move the ball
@@ -442,13 +454,12 @@ var GF = function(){
     ctx.fillText("eater.x : " +eater.x, 10, 520);
     ctx.fillText("eater.y : " +eater.y, 10, 540);
     ctx.fillText("eater.boundingCircleRadius : " +eater.boundingCircleRadius, 10, 560);*/
-  ctx.font = "15px Consolas";
-    ctx.fillText("SCORE: " +currentScore, 500, 20);
+  
 
     if(circleCollide(ball.x, ball.y, ball.boundingCircleRadius, eater.x, eater.y, eater.boundingCircleRadius)) {
       //ctx.fillText("Collision", 10, 20);
       ctx.strokeStyle = ctx.fillStyle = 'red';
-      if (v3<= 193 && v3 >=167){
+      if (v3<= 196 && v3 >=165){
         ctx.strokeStyle = ctx.fillStyle = 'green';
         //ctx.fillText("BINGO", 10, 40);
         eatingSound = new sound("assets/sounds/eatingSound.mp3");
@@ -478,25 +489,100 @@ var GF = function(){
         tmpBallArray.push(ballArray[i]);
       } 
       ballArray = tmpBallArray;
-      createBalls(1);
   }
   
-  function createBalls(numberOfBalls) {
+  function createBalls(numberOfBalls, ballSpeed) {
+     
     for(var i=0; i < numberOfBalls; i++) {
       // Create a ball with random position and speed. 
       // You can change the radius
-        if (i===0){
-          var ball =  new Ball(w,h,ctx);
+    
+  
+      if (compteurFrame % frequenceBalles == 0){
+          console.log("dead")
+      
+          var ball =  new Ball(w,h,ballSpeed); 
           
-        }
+          //beanPopSound = new sound("assets/sounds/beanPopSound.wav");
+          //beanPopSound.play();
+        
         if(!circleCollide(ball.x, ball.y, ball.boundingCircleRadius,eater.x, eater.y, eater.boundingCircleRadius)) {
           // On la rajoute au tableau
-          ballArray[i] = ball;
+        ballArray.push(ball);
         } else {
-          i--;     
-        }
+          ballArray.splice(i,1);  
+          i--;
+        }     
+      }
     }
-  }                                
+  }
+  
+  function lancerBalles() {
+              //console.log(compteurFrame);
+        
+      // Variation du niveau du jeuNiveau du jeu
+    
+    if (currentScore < 10){
+      frequenceBalles = 100;
+      ballSpeed = 2;
+
+    } 
+    if (currentScore == 20){
+      frequenceBalles = 100;
+      ballSpeed = 2.5;
+    } 
+    
+    if (currentScore == 30){
+      frequenceBalles = 90;
+      ballSpeed = 2.5;
+    } 
+    if (currentScore == 40){
+      frequenceBalles = 90;
+      ballSpeed = 3;
+    } 
+    if (currentScore == 50){
+      frequenceBalles = 80;
+      ballSpeed = 2.5;
+    } 
+    if (currentScore == 60){
+      frequenceBalles = 80;
+      ballSpeed = 3;
+    }
+    if (currentScore == 70){
+      frequenceBalles = 70;
+      ballSpeed = 3;
+    } 
+    if (currentScore == 80){
+      frequenceBalles = 60;
+      ballSpeed = 2.5;
+    } 
+    if (currentScore == 90){
+      frequenceBalles = 60;
+      ballSpeed = 3;
+    }
+    if (currentScore == 100){
+      frequenceBalles = 50;
+      ballSpeed = 3;
+    } 
+    if (currentScore == 110){
+      frequenceBalles = 50;
+      ballSpeed = 3.5;
+    } 
+    if (currentScore == 120){
+      frequenceBalles = 40;
+      ballSpeed = 3.5;
+    } 
+    if (currentScore == 130){
+      frequenceBalles = 40;
+      ballSpeed = 4;
+    } 
+    if (currentScore == 140){
+      frequenceBalles = 30;
+      ballSpeed = 5;
+    } 
+    createBalls(1, ballSpeed);     
+  }    
+    
 
   var start = function(){
     // adds a div for displaying the fps value
@@ -523,7 +609,8 @@ var GF = function(){
 
     // We create tge balls: try to change the parameter
     if(states.play){
-      createBalls(1); 
+      createBalls(1, 2); 
+
     }
           
 

@@ -5,14 +5,14 @@ function randomBall(){
 }
 
   // constructor function for balls
-  function Ball(w,h,ctx) {
-   this.v = 4;
+  function Ball(w,h,speedBall) {
+   this.v = speedBall;
    this.boundingCircleRadius = 30/2;
    this.color = "black";
    this.dead = false;
    this.image = new Image();
    this.image.src= randomBall();
-   //console.log(this.image.src);
+   console.log(this.v);
     
 
   /*
