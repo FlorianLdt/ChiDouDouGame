@@ -1,6 +1,6 @@
 // version 0.2
 
-var mousepos = {x:0, y:0};
+mousepos = {x:0, y:0};
 // Inits
 window.onload = function init() {
   var game = new GF();
@@ -18,7 +18,7 @@ var eatingSound;
 var GF = function(){
   // Vars relative to the canvas
   var canvas, ctx, w, h; 
-  var mousepos = {x:0, y:0};
+  mousepos = {x:0, y:0};
 
   // Game states
   var states = {
@@ -70,16 +70,6 @@ var GF = function(){
   // vars for handling inputs
   var inputStates = {};
 
-  // The eater !
-  var eater = {
-    x: 0,
-    y: 0,
-    speed:100, // pixels/s this time !
-    boundingCircleRadius: 80,
-    hole: 50,
-    angle:0
-  };
-
   var player = {
     x:0,
     y:0,
@@ -94,37 +84,7 @@ var GF = function(){
     ctx.clearRect(0, 0, w, h);
   }
 
-  // Functions for drawing the eater and maybe other objects
-  function drawMyEater() {
-    // save the context
-    
-    ctx.save();
-    ctx.translate( eater.x, eater.y );
-    ctx.rotate( eater.angle );
-    frogImage = new Image();
-    frogImage.src="assets/images/panda.png";
-    // Draw bounding circle
-    ctx.beginPath();
-    ctx.strokeStyle = "red";
-    ctx.arc(0, 0, eater.boundingCircleRadius, 0, 2*Math.PI, true);
-    ctx.lineWidth = 5;
-    ctx.stroke();
-    ctx.beginPath();
-    negAngle = -(eater.hole/2)*Math.PI/180;
-    posAngle = (eater.hole/2)*Math.PI/180;
-    var dx = w - h/2;                                         
-    var dy = w/2 - h/2;
-    angleDebutMonstre = Math.atan2(dy,dx)*Math.PI/180;
-    
-    ctx.strokeStyle = "black";
-    ctx.arc(0, 0, eater.boundingCircleRadius, negAngle, posAngle, true);
-    
-    ctx.lineWidth = 5;
-    ctx.stroke();
-    ctx.drawImage(frogImage,-80, -80, 162, 162);
-    // restore the context
-    ctx.restore(); 
-  }
+  
 
   // Main Loop of the game
   var mainLoop = function(time){
@@ -160,9 +120,7 @@ var GF = function(){
     if (inputStates.mousedown) { 
       //ctx.fillText("mousedown b" + inputStates.mouseButton, 5, 180);
     }
-    if(eater.dead) {
-      currentState = states.gameOver;
-    }
+    
       
     switch(currentState) {
 
@@ -209,16 +167,17 @@ var GF = function(){
 
         // number of ms since last frame draw
         delta = timer(time);
-        drawMyEater();
+        panda = new Panda(w,h);
+      
         updatePlayer();
         ctx.fillStyle = "white";
-      ctx.font = "15px Consolas";
-    ctx.fillText("SCORE: " +currentScore, 500, 20);
+        ctx.font = "15px Consolas";
+        ctx.fillText("SCORE: " +currentScore, 500, 20);
         // Check inputs and move the eater
-        updateEaterPosition(delta);
+        updatePanda(panda);
 
         // update and draw balls
-        updateBalls(delta);
+        updateBalls(delta,panda);
       break;
       //////////////////////////////////////////////////////////
           
@@ -326,7 +285,7 @@ var GF = function(){
         //////////////////////////////////////////////////////////
         case states.gameOver:
           //console.log("GAME OVER");
-          eater.dead=false;
+          panda.dead=false;
           ctx.fillStyle = "red";
           ctx.font = "60px Consolas";
           var textString = "GAME OVER";
@@ -365,42 +324,9 @@ var GF = function(){
     requestAnimationFrame(mainLoop);
   };
 
-  function updateEaterPosition(delta) {
-    eater.speedX = eater.speedY = 0;
-    // check inputStates
-    if (inputStates.left) {
-      //eater.speedX = -eater.speed;
-    }
-    if (inputStates.up) {
-      //eater.speedY = -eater.speed;
-    }
-    if (inputStates.right) {
-      //eater.speedX = eater.speed;
-    }
-    if (inputStates.down) {
-      //eater.speedY = eater.speed;
-    } 
-    if (inputStates.space) {
-    }
-    if (inputStates.mousePos) { 
-    }
-    if (inputStates.mousedown) { 
-      eater.speed = 500;
-    } else {
-      // mouse up
-      eater.speed = 100;
-    }
-    var dx = eater.x - mousepos.x;
-    var dy = eater.y - mousepos.y;
-    eater.angle = Math.atan2(dy, dx) + Math.PI;
+  
 
-    // Compute the incX and inY in pixels depending
-    // on the time elasped since last redraw
-    eater.x += calcDistanceToMove(delta, eater.speedX);
-    eater.y += calcDistanceToMove(delta, eater.speedY);
-  }
-
-  function updateBalls(delta) {
+  function updateBalls(delta,panda) {
     
      compteurFrame ++;
   // for each ball in the array
@@ -414,12 +340,19 @@ var GF = function(){
       testCollisionWithWalls(ball,w,h);
 
       // teste collisions avec monstre
-      checkCollisions(ball);
+      checkCollisions(ball,panda);
 
       // 3) draw the ball
       ball.draw(ctx);
     }
   } 
+
+  function updatePanda(panda){
+
+    panda.move(delta,inputStates);
+    panda.draw(ctx);
+  }
+
     
   function updatePlayer() {
   // The player is just a circle, drawn at the mouse position
@@ -428,23 +361,22 @@ var GF = function(){
     if(inputStates.mousePos) {
       player.x = inputStates.mousePos.x;
       player.y = inputStates.mousePos.y;
-      // draws a circle
-      ctx.beginPath();
-      ctx.arc(player.x, player.y, player.boundingCircleRadius, 0, 2*Math.PI);
-      ctx.stroke();
+      leaveImage = new Image();
+      leaveImage.src="assets/images/leave.png";
+      ctx.drawImage(leaveImage,player.x-20, player.y-20, 40, 40);
     }
   }
 
-  function checkCollisions(ball) {
+  function checkCollisions(ball, panda) {
     /*ctx.font = "15px Consolas";
     ctx.fillText("angleDebutMonstre :" +angleDebutMonstre, 10, 320);
     ctx.fillText("negAngle : " + negAngle * (180 / Math.PI)+"°", 10, 340);
     ctx.fillText("posAngle : " + posAngle * (180 / Math.PI)+"°", 10, 360);
-    ctx.fillText("collisionSourisMonstre : " +collisionSourisMonstre(player, eater.x, eater.y) +"°", 10, 380);
-    ctx.fillText("collisionMonstreBalle : " +collisionMonstreBalle(ball, eater.x, eater.y) +"°", 10, 400);*/
-    var v1 = collisionSourisMonstre(player, eater.x, eater.y) + (posAngle*(180 / Math.PI));
-    var v2 = collisionMonstreBalle(ball, eater.x, eater.y) + (negAngle*(180 / Math.PI));
-    var v3 = Math.abs(collisionSourisMonstre(player, eater.x, eater.y) + (posAngle*(180 / Math.PI))-collisionMonstreBalle(ball, eater.x, eater.y) + (negAngle*(180 / Math.PI)));
+    ctx.fillText("collisionSourisMonstre : " +collisionSourisMonstre(player, panda.x, panda.y) +"°", 10, 380);
+    ctx.fillText("collisionMonstreBalle : " +collisionMonstreBalle(ball, panda.x, panda.y) +"°", 10, 400);*/
+    var v1 = collisionSourisMonstre(player, panda.x, panda.y) + (posAngle*(180 / Math.PI));
+    var v2 = collisionMonstreBalle(ball, panda.x, panda.y) + (negAngle*(180 / Math.PI));
+    var v3 = Math.abs(collisionSourisMonstre(player, panda.x, panda.y) + (posAngle*(180 / Math.PI))-collisionMonstreBalle(ball, panda.x, panda.y) + (negAngle*(180 / Math.PI)));
     //var v3 = collisionSourisMonstre(player, eater.x, eater.y) + (posAngle*(180 / Math.PI))-collisionMonstreBalle(ball, eater.x, eater.y) + (negAngle*(180 / Math.PI));
 
     /*ctx.fillText("collisionSourisMonstre+posAngle: " + v1 +"°", 10, 420);
@@ -453,12 +385,12 @@ var GF = function(){
     ctx.fillText("ball.x : " +ball.x, 10, 460);
     ctx.fillText("ball.y : " +ball.y, 10, 480);
     ctx.fillText("ball.boundingCircleRadius : " +ball.boundingCircleRadius, 10, 500);
-    ctx.fillText("eater.x : " +eater.x, 10, 520);
-    ctx.fillText("eater.y : " +eater.y, 10, 540);
-    ctx.fillText("eater.boundingCircleRadius : " +eater.boundingCircleRadius, 10, 560);*/
+    ctx.fillText("eater.x : " +panda.x, 10, 520);
+    ctx.fillText("eater.y : " +panda.y, 10, 540);
+    ctx.fillText("eater.boundingCircleRadius : " +panda.boundingCircleRadius, 10, 560);*/
   
 
-    if(circleCollide(ball.x, ball.y, ball.boundingCircleRadius, eater.x, eater.y, eater.boundingCircleRadius)) {
+    if(circleCollide(ball.x, ball.y, ball.boundingCircleRadius, panda.x, panda.y, panda.boundingCircleRadius)) {
       //ctx.fillText("Collision", 10, 20);
       ctx.strokeStyle = ctx.fillStyle = 'red';
       if (v3<= 196 && v3 >=165){
@@ -472,8 +404,11 @@ var GF = function(){
         gameOverSound = new sound("assets/sounds/gameOverSound.wav");
         gameOverSound.play();
         ball.color = 'red';
-        eater.dead = true;
-        //console.log("collision1");
+        panda.dead = true;
+
+      currentState = states.gameOver;
+    
+        console.log("collision1");
       } 
     } else {
         //ctx.fillText("No collision", 10, 20);
@@ -493,7 +428,7 @@ var GF = function(){
       ballArray = tmpBallArray;
   }
   
-  function createBalls(numberOfBalls, ballSpeed) {
+  function createBalls(numberOfBalls, ballSpeed, panda) {
      
     for(var i=0; i < numberOfBalls; i++) {
       // Create a ball with random position and speed. 
@@ -508,7 +443,7 @@ var GF = function(){
           //beanPopSound = new sound("assets/sounds/beanPopSound.wav");
           //beanPopSound.play();
         
-        if(!circleCollide(ball.x, ball.y, ball.boundingCircleRadius,eater.x, eater.y, eater.boundingCircleRadius)) {
+        if(!circleCollide(ball.x, ball.y, ball.boundingCircleRadius,panda.x, panda.y, panda.boundingCircleRadius)) {
           // On la rajoute au tableau
         ballArray.push(ball);
         } else {
@@ -582,7 +517,7 @@ var GF = function(){
       frequenceBalles = 30;
       ballSpeed = 5;
     } 
-    createBalls(1, ballSpeed);     
+    createBalls(1, ballSpeed, panda);     
   }    
     
 
@@ -599,8 +534,7 @@ var GF = function(){
     w = canvas.width; 
     h = canvas.height; 
 
-    eater.x = w/2;
-    eater.y = h/2;
+    
           
 
     // important, we will draw with this object
@@ -611,7 +545,9 @@ var GF = function(){
 
     // We create tge balls: try to change the parameter
     if(states.play){
-      createBalls(1, 2); 
+      var panda = new Panda(w,h);
+        panda.draw(ctx);
+      createBalls(1, 2, panda); 
 
     }
           
