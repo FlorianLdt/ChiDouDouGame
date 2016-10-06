@@ -102,7 +102,7 @@ var GF = function(){
     ctx.translate( eater.x, eater.y );
     ctx.rotate( eater.angle );
     frogImage = new Image();
-    frogImage.src="assets/images/frog.png";
+    frogImage.src="assets/images/panda.png";
     // Draw bounding circle
     ctx.beginPath();
     ctx.strokeStyle = "red";
@@ -115,11 +115,13 @@ var GF = function(){
     var dx = w - h/2;                                         
     var dy = w/2 - h/2;
     angleDebutMonstre = Math.atan2(dy,dx)*Math.PI/180;
-    ctx.drawImage(frogImage,-80, -80, 160, 160);
-    ctx.strokeStyle = "green";
+    
+    ctx.strokeStyle = "black";
     ctx.arc(0, 0, eater.boundingCircleRadius, negAngle, posAngle, true);
+    
     ctx.lineWidth = 5;
     ctx.stroke();
+    ctx.drawImage(frogImage,-80, -80, 162, 162);
     // restore the context
     ctx.restore(); 
   }
