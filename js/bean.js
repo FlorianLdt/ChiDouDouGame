@@ -1,7 +1,7 @@
 
   // constructor function for balls
-  function Ball(w,h,speedBall) {
-   this.v = speedBall;
+  function Bean(w,h,speedBean) {
+   this.v = speedBean;
    this.boundingCircleRadius = 30/2;
    this.color = "black";
    this.dead = false;
@@ -66,11 +66,9 @@
       ctx.save();
       ctx.beginPath();
       ctx.fillStyle = this.color;
-      //ctx.arc(this.x, this.y, this.boundingCircleRadius, 0, 2*Math.PI);
       ctx.fill();
       ctx.drawImage(beanImage,this.x-15, this.y-15);
       ctx.restore();
-      //ctx.fillText("Ball : (x: " + this.x + ",y: " + this.y +")", 10, 580);
       this.color = 'white';
     };
     
@@ -81,7 +79,4 @@
       this.x += this.v * Math.cos(this.angle);
       this.y += this.v * Math.sin(this.angle);
     };
-
-
-
   }

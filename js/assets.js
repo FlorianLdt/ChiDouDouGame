@@ -3,15 +3,8 @@ var assetsToLoadURLs = {
     pandaImage: { url: 'assets/images/panda.png'}, 
 	leaveImage: { url: 'assets/images/leave.png'},
     beanImage: { url: 'assets/images/bean.png'},
-    //beanImage1: { url: 'assets/images/bean1.png'},
-    //beanImage2: { url: 'assets/images/bean2.png'},
-    //beanImage3: { url: 'assets/images/bean3.png'},
-    //beanImage4: { url: 'assets/images/bean4.png'},
-    //beanImage5: { url: 'assets/images/bean5.png'},
-    //beanImage6: { url: 'assets/images/bean6.png'},
     eatingSound: { url: "assets/sounds/eatingSound.mp3", buffer: true, loop: false, volume: 1.0  },
     gameOverSound: { url: "assets/sounds/gameOverSound.wav" , buffer: true, loop: false, volume: 1.0},
-    beanPopSound: { url: "assets/sounds/beanPopSound.wav", buffer: true, loop: false, volume: 1.0 },
     bgSound: { url: 'assets/sounds/bgSound.mp3' , buffer: true, loop: true, volume: 0.2}
 };
 
@@ -21,13 +14,6 @@ function loadAssets(callback) {
     loadAssetsUsingHowlerAndNoXhr(assetsToLoadURLs, callback);
 }
 
-// You do not have to understand in details the next lines of code...
-// just use them!
-
-/* ############################
-    BUFFER LOADER for loading multiple files asyncrhonously. The callback functions is called when all
-    files have been loaded and decoded 
- ############################## */
 function isImage(url) {
     return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
 }
@@ -81,8 +67,8 @@ function loadAssetsUsingHowlerAndNoXhr(assetsToBeLoaded, callback) {
                     console.log("Loaded asset " + loadedAssets);
                 }
             }); // End of howler.js callback
-        } // if
+        } 
 
-    } // for
-} // function
+    }
+}
 

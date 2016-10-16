@@ -13,8 +13,6 @@ function addListeners(inputStates, canvas){
       inputStates.space = true;
     } else if (event.keyCode === 78) { // N key for New Game
       inputStates.keyN = true;
-    } else if (event.keyCode === 72) { // H key for High Scores
-      inputStates.keyH = true;
     } else if (event.keyCode === 82) { // R key for Rules
       inputStates.keyR = true;
     } else if (event.keyCode === 67) { // C key for Credits
@@ -40,8 +38,6 @@ function addListeners(inputStates, canvas){
       inputStates.space = false;
     } else if (event.keyCode === 78) { // N key for New Game
       inputStates.keyN = false;
-    } else if (event.keyCode === 72) { // H key for High Scores
-      inputStates.keyH = false;
     } else if (event.keyCode === 82) { // R key for Rules
       inputStates.keyR = false;
     } else if (event.keyCode === 67) { // C key for Credits

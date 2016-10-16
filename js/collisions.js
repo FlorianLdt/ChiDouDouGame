@@ -1,6 +1,6 @@
-function collisionSourisMonstre(player, eaterx, eatery) {
-  var dx = player.x - eaterx;
-  var dy = player.y - eatery;
+function collisionSourisMonstre(player, pandax, panday) {
+  var dx = player.x - pandax;
+  var dy = player.y - panday;
   if (dx>0 && dy>=0){
     var angle = Math.atan2(dy,dx);
   } else if (dx>0 && dy<0){
@@ -15,9 +15,9 @@ function collisionSourisMonstre(player, eaterx, eatery) {
   return angle* (180 / Math.PI);
 }
 
-function collisionMonstreBalle(balle, eaterx, eatery) {
-  var dx = eaterx - balle.x;
-  var dy = eatery - balle.y;
+function collisionMonstreBean(bean, pandax, panday) {
+  var dx = pandax - bean.x;
+  var dy = panday - bean.y;
   if (dx>0 && dy>=0){
     var angle = Math.atan2(dy,dx);
   } else if (dx>0 && dy<0){
@@ -38,25 +38,25 @@ function circleCollide(x1, y1, r1, x2, y2, r2) {
   return ((dx * dx + dy * dy) < (r1 + r2)*(r1+r2));  
 }
 
-function testCollisionWithWalls(ball,w,h) {
+function testCollisionWithWalls(bean,w,h) {
   // left
-  if (ball.x < ball.boundingCircleRadius) {
-    ball.x = ball.boundingCircleRadius;
-    ball.angle = -ball.angle + Math.PI;
+  if (bean.x < bean.boundingCircleRadius) {
+    bean.x = bean.boundingCircleRadius;
+    bean.angle = -bean.angle + Math.PI;
   } 
   // right
-  if (ball.x > w - (ball.boundingCircleRadius)) {
-    ball.x = w - (ball.boundingCircleRadius);
-    ball.angle = -ball.angle + Math.PI; 
+  if (bean.x > w - (bean.boundingCircleRadius)) {
+    bean.x = w - (bean.boundingCircleRadius);
+    bean.angle = -bean.angle + Math.PI; 
   }     
   // up
-  if (ball.y < ball.boundingCircleRadius) {
-    ball.y = ball.boundingCircleRadius;
-    ball.angle = -ball.angle;     
+  if (bean.y < bean.boundingCircleRadius) {
+    bean.y = bean.boundingCircleRadius;
+    bean.angle = -bean.angle;     
   }     
   // down
-  if (ball.y > h - (ball.boundingCircleRadius)) {
-    ball.y = h - (ball.boundingCircleRadius);
-    ball.angle = -ball.angle; 
+  if (bean.y > h - (bean.boundingCircleRadius)) {
+    bean.y = h - (bean.boundingCircleRadius);
+    bean.angle = -bean.angle; 
   } 
 }

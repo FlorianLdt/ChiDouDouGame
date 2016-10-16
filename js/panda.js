@@ -41,24 +41,7 @@ function Panda(w,h) {
 
    this.move = function(delta,inputStates) {
       panda.speedX = panda.speedY = 0;
-    console.log(mousepos.x+mousepos.y)
     // check inputStates
-    if (inputStates.left) {
-      //eater.speedX = -eater.speed;
-    }
-    if (inputStates.up) {
-      //eater.speedY = -eater.speed;
-    }
-    if (inputStates.right) {
-      //eater.speedX = eater.speed;
-    }
-    if (inputStates.down) {
-      //eater.speedY = eater.speed;
-    } 
-    if (inputStates.space) {
-    }
-    if (inputStates.mousePos) { 
-    }
     if (inputStates.mousedown) { 
       panda.speed = 500;
     } else {

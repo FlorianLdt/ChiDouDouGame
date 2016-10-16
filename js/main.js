@@ -25,13 +25,9 @@ var GF = function(){
     startMenu : 0,
     play : 1,
     gameOver : 2,
-    //highScores: 3,
-    rules: 4,
-    credits: 5
+    rules: 3,
+    credits: 4
   };
-
-
- 
 
   // Let's begin with the startMenu
   currentState = states.startMenu;
@@ -42,8 +38,8 @@ var GF = function(){
     // frame updating count
   compteurFrame = 0;
   
-  // Ball frequence 
-  frequenceBalles =200;
+  // Bean frequence 
+  frequenceBeans =200;
 
   // vars for handling inputs
   var inputStates = {};
@@ -54,8 +50,8 @@ var GF = function(){
     boundingCircleRadius: 20    
   };
 
-  // array of balls to animate
-  var ballArray = [];
+  // array of beans to animate
+  var beanArray = [];
 
   // clears the canvas content
   function clearCanvas() {
@@ -65,7 +61,6 @@ var GF = function(){
   function allAssetsLoaded(assetsLoaded) {
         console.log("all samples loaded and decoded");
         for (var asset in assetsLoaded) {
-            //console.log("assets[" + asset + "] = " + assetsLoaded[asset]);
             assets[asset] = assetsLoaded[asset];
         }
     }
@@ -75,37 +70,11 @@ var GF = function(){
     // Clear the canvas
     clearCanvas();
     // check inputStates
-    if (inputStates.left) {
-      //ctx.fillText("left", 150, 20);
-    }
-    if (inputStates.up) {
-      //ctx.fillText("up", 150, 40);
-    }
-    if (inputStates.right) {
-      //ctx.fillText("right", 150, 60);
-    }
-    if (inputStates.down) {
-    //ctx.fillText("down", 150, 80);
-    } 
-    if (inputStates.space) {
-      //ctx.fillText("space bar", 140, 100);
-    }
-    if (inputStates.keyN) {
-      //ctx.fillText("n pressed", 140, 100);
-    }
-    if (inputStates.keyG) {
-      //ctx.fillText("G pressed", 140, 100);
-    }
     if (inputStates.mousePos) { 
       mousepos.x = inputStates.mousePos.x;
       mousepos.y = inputStates.mousePos.y;
-      //ctx.fillText("mouse(x = " + inputStates.mousePos.x + " y = " + inputStates.mousePos.y +")", 370, 580);
     }
-    if (inputStates.mousedown) { 
-      //ctx.fillText("mousedown b" + inputStates.mouseButton, 5, 180);
-    }
-    
-      
+     
     switch(currentState) {
 
       // START MENU
@@ -120,9 +89,6 @@ var GF = function(){
         var textString = "(N)ew Game";
         textWidth = ctx.measureText(textString).width;
         ctx.fillText(textString, w/2 - textWidth/2, 250);
-        //var textString = "(H)igh Scores";
-        //textWidth = ctx.measureText(textString).width;
-        //ctx.fillText("(H)igh Scores", 150, 300);
         var textString = "(R)ules";
         textWidth = ctx.measureText(textString).width;
         ctx.fillText(textString, w/2 - textWidth/2, 350);
@@ -133,8 +99,6 @@ var GF = function(){
         ctx.fillText("Developed By SEYCHA Sénthène & LUDOT Florian.", 10, 590);
         if(inputStates.keyN) {
           currentState = states.play;
-        } else if(inputStates.keyH) {
-          //currentState = states.highScores;
         } else if(inputStates.keyR) {
           currentState = states.rules;
         } else if(inputStates.keyC) {
@@ -151,7 +115,6 @@ var GF = function(){
 
         // number of ms since last frame draw
         delta = timer(time);
-        
         panda = new Panda(w,h);
         updatePlayer();
         ctx.fillStyle = "white";
@@ -160,29 +123,10 @@ var GF = function(){
         // Check inputs and move the eater
         updatePanda(panda,assets.pandaImage);
 
-        // update and draw balls
-        updateBalls(delta,panda, assets);
+        // update and draw beans
+        updateBeans(delta,panda, assets);
       break;
       //////////////////////////////////////////////////////////
-          
-      // HIGH SCORE
-      //////////////////////////////////////////////////////////
-      case states.highScores:
-        ctx.fillStyle = "red";
-        ctx.font = "60px Consolas";
-        ctx.fillText("HIGH SCORES", 115, 120);
-        ctx.font = "30px Consolas";
-        ctx.fillText("#1 Sénthène : 689", 115, 220);
-        ctx.fillText("#2 Arsim : 564", 115, 260);
-        ctx.fillText("#3 Yassine : 532", 115, 300);
-        ctx.fillText("#4 Yassou : 467", 115, 340);
-        ctx.fillText("#5 Tiboux : 9", 115, 380);
-        ctx.fillText("(B)ack To Main Menu", 130, 460);
-        if(inputStates.keyB) {
-          currentState = states.startMenu;
-        } 
-      break;
-      ///////////////////////////////////////////////////////////
 
       // RULES
       //////////////////////////////////////////////////////////
@@ -196,13 +140,13 @@ var GF = function(){
           var textString = "吃 豆 豆 (Chi Dou Dou) is a little game where you";
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 200);
-          var textString = "have to rotate the central creature with the mouse";
+          var textString = "have to rotate the panda with the mouse";
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 225);
           var textString = "to eat all the beans which will come through it.";
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 250);
-          var textString = "If you grabe a bean with the creature's mouth,";
+          var textString = "If you grabe a bean with the panda's mouth,";
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 300);
           var textString = "you score 1 point.";
@@ -211,7 +155,7 @@ var GF = function(){
           var textString = "However, if the bean hit another part of the";
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 350);
-          var textString = "creature except the creature's mouth ... GAME OVER!";
+          var textString = "panda except the panda's mouth ... GAME OVER!";
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 375);
           var textString = "Have fun and don't miss the beans !! :)";
@@ -248,7 +192,7 @@ var GF = function(){
           var textString = "Game Framework.";
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 300);
-          var textString = "The Backgound image copyright belong to";
+          var textString = "The Background image copyright belong to";
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 350);
           var textString = "respective owner.";
@@ -279,25 +223,18 @@ var GF = function(){
           var textString = "YOUR SCORE : " +currentScore;
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 200);
-          //ctx.fillText("YOUR HIGH SCORE : 689", 90, 210);  
           ctx.font = "30px Consolas";
           var textString = "(N)ew Game";
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 350);
-          //var textString = "GAME OVER";
-        //textWidth = ctx.measureText(textString).width;
-          //ctx.fillText("(H)igh Scores", 180, 400);
           var textString = "(G)o To Main Menu";
           textWidth = ctx.measureText(textString).width;
           ctx.fillText(textString, w/2 - textWidth/2, 450);
           if(inputStates.keyN) {
             currentScore = 0;
-            ballArray = [];
-      frequenceBalles =150;
-            lancerBalles();
+            beanArray = [];
+            lancerBeans();
             currentState = states.play;
-          } else if(inputStates.keyH) {
-            //currentState = states.highScores;
           } else if(inputStates.keyG) {
             currentState = states.startMenu;
           } 
@@ -310,24 +247,24 @@ var GF = function(){
 
   
 
-  function updateBalls(delta,panda, assets) {
+  function updateBeans(delta,panda, assets) {
     
      compteurFrame ++;
-  // for each ball in the array
-    lancerBalles();
-    for(var i=0; i < ballArray.length; i++) {
-      var ball = ballArray[i];
-      // 1) move the ball
-      ball.move();   
+  // for each bean in the array
+    lancerBeans();
+    for(var i=0; i < beanArray.length; i++) {
+      var bean = beanArray[i];
+      // 1) move the bean
+      bean.move();   
 
-      // 2) test if the ball collides with a wall
-      testCollisionWithWalls(ball,w,h);
+      // 2) test if the bean collides with a wall
+      testCollisionWithWalls(bean,w,h);
 
       // teste collisions avec monstre
-      checkCollisions(ball,panda);
+      checkCollisions(bean,panda);
 
-      // 3) draw the ball
-      ball.draw(ctx, assets.beanImage);
+      // 3) draw the bean
+      bean.draw(ctx, assets.beanImage);
     }
   } 
 
@@ -350,152 +287,125 @@ var GF = function(){
     }
   }
 
-  function checkCollisions(ball, panda) {
-    /*ctx.font = "15px Consolas";
-    ctx.fillText("angleDebutMonstre :" +angleDebutMonstre, 10, 320);
-    ctx.fillText("negAngle : " + negAngle * (180 / Math.PI)+"°", 10, 340);
-    ctx.fillText("posAngle : " + posAngle * (180 / Math.PI)+"°", 10, 360);
-    ctx.fillText("collisionSourisMonstre : " +collisionSourisMonstre(player, panda.x, panda.y) +"°", 10, 380);
-    ctx.fillText("collisionMonstreBalle : " +collisionMonstreBalle(ball, panda.x, panda.y) +"°", 10, 400);*/
+  function checkCollisions(bean, panda) {
     var v1 = collisionSourisMonstre(player, panda.x, panda.y) + (posAngle*(180 / Math.PI));
-    var v2 = collisionMonstreBalle(ball, panda.x, panda.y) + (negAngle*(180 / Math.PI));
-    var v3 = Math.abs(collisionSourisMonstre(player, panda.x, panda.y) + (posAngle*(180 / Math.PI))-collisionMonstreBalle(ball, panda.x, panda.y) + (negAngle*(180 / Math.PI)));
-    //var v3 = collisionSourisMonstre(player, eater.x, eater.y) + (posAngle*(180 / Math.PI))-collisionMonstreBalle(ball, eater.x, eater.y) + (negAngle*(180 / Math.PI));
+    var v2 = collisionMonstreBean(bean, panda.x, panda.y) + (negAngle*(180 / Math.PI));
+    var v3 = Math.abs(collisionSourisMonstre(player, panda.x, panda.y) + (posAngle*(180 / Math.PI))-collisionMonstreBean(bean, panda.x, panda.y) + (negAngle*(180 / Math.PI)));
 
-    /*ctx.fillText("collisionSourisMonstre+posAngle: " + v1 +"°", 10, 420);
-    ctx.fillText("collisionMonstreBalle+negAngle : " + v2 +"°", 10, 440);
-    ctx.fillText("dif angle :" +v3, 10, 200);
-    ctx.fillText("ball.x : " +ball.x, 10, 460);
-    ctx.fillText("ball.y : " +ball.y, 10, 480);
-    ctx.fillText("ball.boundingCircleRadius : " +ball.boundingCircleRadius, 10, 500);
-    ctx.fillText("eater.x : " +panda.x, 10, 520);
-    ctx.fillText("eater.y : " +panda.y, 10, 540);
-    ctx.fillText("eater.boundingCircleRadius : " +panda.boundingCircleRadius, 10, 560);*/
-  
-
-    if(circleCollide(ball.x, ball.y, ball.boundingCircleRadius, panda.x, panda.y, panda.boundingCircleRadius)) {
-      //ctx.fillText("Collision", 10, 20);
+    if(circleCollide(bean.x, bean.y, bean.boundingCircleRadius, panda.x, panda.y, panda.boundingCircleRadius)) {
       ctx.strokeStyle = ctx.fillStyle = 'red';
       if (v3<= 196 && v3 >=165){
         ctx.strokeStyle = ctx.fillStyle = 'green';
-        //ctx.fillText("BINGO", 10, 40);
         playSound(assets.eatingSound);
-        removeBallAndGenerateNew(ball);
+        removeBeanAndGenerateNew(bean);
         currentScore++;
       } else {
         playSound(assets.gameOverSound);
-        ball.color = 'red';
+        bean.color = 'red';
         panda.dead = true;
-
-      currentState = states.gameOver;
-    
-        console.log("collision1");
+        currentState = states.gameOver;
       } 
     } else {
-        //ctx.fillText("No collision", 10, 20);
         ctx.strokeStyle = ctx.fillStyle = 'white';
     }
   }
 
-  //Supprime une balle "bonus" et en crée 2 nouvelles aléatoires
-  function removeBallAndGenerateNew(ball) {
-    var idxRmvBall = ballArray.indexOf(ball);
-    var tmpBallArray = [];
+  //Supprime une bean "bonus" et en crée 2 nouvelles aléatoires
+  function removeBeanAndGenerateNew(bean) {
+    var idxRmvBean = beanArray.indexOf(bean);
+    var tmpBeanArray = [];
         
-    for(var i = 0; i < ballArray.length; i++) {
-      if(i !== idxRmvBall)
-        tmpBallArray.push(ballArray[i]);
+    for(var i = 0; i < beanArray.length; i++) {
+      if(i !== idxRmvBean)
+        tmpBeanArray.push(beanArray[i]);
       } 
-      ballArray = tmpBallArray;
+      beanArray = tmpBeanArray;
   }
   
-  function createBalls(numberOfBalls, ballSpeed, panda) {
+  function createBeans(numberOfBeans, beanSpeed, panda) {
      
-    for(var i=0; i < numberOfBalls; i++) {
-      // Create a ball with random position and speed. 
+    for(var i=0; i < numberOfBeans; i++) {
+      // Create a bean with random position and speed. 
       // You can change the radius
     
   
-      if (compteurFrame % frequenceBalles == 0){
-          console.log("dead")
-      
-          var ball =  new Ball(w,h,ballSpeed);
+      if (compteurFrame % frequenceBeans == 0){
+          var bean =  new Bean(w,h,beanSpeed);
         
-        if(!circleCollide(ball.x, ball.y, ball.boundingCircleRadius,panda.x, panda.y, panda.boundingCircleRadius)) {
+        if(!circleCollide(bean.x, bean.y, bean.boundingCircleRadius,panda.x, panda.y, panda.boundingCircleRadius)) {
           // On la rajoute au tableau
-        ballArray.push(ball);
+        beanArray.push(bean);
         } else {
-          ballArray.splice(i,1);  
+          beanArray.splice(i,1);  
           i--;
         }     
       }
     }
   }
   
-  function lancerBalles() {
-              //console.log(compteurFrame);
+  function lancerBeans() {
         
       // Variation du niveau du jeuNiveau du jeu
     
     if (currentScore < 10){
-      frequenceBalles = 100;
-      ballSpeed = 2;
+      frequenceBeans = 100;
+      beanSpeed = 2;
 
     } 
     if (currentScore == 20){
-      frequenceBalles = 100;
-      ballSpeed = 2.5;
+      frequenceBeans = 100;
+      beanSpeed = 2.5;
     } 
     
     if (currentScore == 30){
-      frequenceBalles = 90;
-      ballSpeed = 2.5;
+      frequenceBeans = 90;
+      beanSpeed = 2.5;
     } 
     if (currentScore == 40){
-      frequenceBalles = 90;
-      ballSpeed = 3;
+      frequenceBeans = 90;
+      beanSpeed = 3;
     } 
     if (currentScore == 50){
-      frequenceBalles = 80;
-      ballSpeed = 2.5;
+      frequenceBeans = 80;
+      beanSpeed = 2.5;
     } 
     if (currentScore == 60){
-      frequenceBalles = 80;
-      ballSpeed = 3;
+      frequenceBeans = 80;
+      beanSpeed = 3;
     }
     if (currentScore == 70){
-      frequenceBalles = 70;
-      ballSpeed = 3;
+      frequenceBeans = 70;
+      beanSpeed = 3;
     } 
     if (currentScore == 80){
-      frequenceBalles = 60;
-      ballSpeed = 2.5;
+      frequenceBeans = 60;
+      beanSpeed = 2.5;
     } 
     if (currentScore == 90){
-      frequenceBalles = 60;
-      ballSpeed = 3;
+      frequenceBeans = 60;
+      beanSpeed = 3;
     }
     if (currentScore == 100){
-      frequenceBalles = 50;
-      ballSpeed = 3;
+      frequenceBeans = 50;
+      beanSpeed = 3;
     } 
     if (currentScore == 110){
-      frequenceBalles = 50;
-      ballSpeed = 3.5;
+      frequenceBeans = 50;
+      beanSpeed = 3.5;
     } 
     if (currentScore == 120){
-      frequenceBalles = 40;
-      ballSpeed = 3.5;
+      frequenceBeans = 40;
+      beanSpeed = 3.5;
     } 
     if (currentScore == 130){
-      frequenceBalles = 40;
-      ballSpeed = 4;
+      frequenceBeans = 40;
+      beanSpeed = 4;
     } 
     if (currentScore == 140){
-      frequenceBalles = 30;
-      ballSpeed = 5;
+      frequenceBeans = 30;
+      beanSpeed = 5;
     } 
-    createBalls(1, ballSpeed, panda);     
+    createBeans(1, beanSpeed, panda);     
   } 
     
 
@@ -514,36 +424,27 @@ var GF = function(){
     // default police for text
     ctx.font="20px Arial";
     addListeners(inputStates, canvas);
-
-    // We create tge balls: try to change the parameter
-    /*if(states.play){
-      var panda = new Panda(w,h);
-      console.log(assets.pandaImage);
-        panda.draw(ctx,assets.pandaImage);
-      createBalls(1, 2, panda); 
-
-    }*/
-	
-		  loadAssets(function (assets) {
-            // all assets (images, sounds) loaded, we can start the animation
-		   allAssetsLoaded(assets);
-           playMusic();
-           requestAnimationFrame(mainLoop); 
-        });
+    loadAssets(function (assets) {
+      // all assets (images, sounds) loaded, we can start the animation
+		  allAssetsLoaded(assets);
+      playMusic();
+      requestAnimationFrame(mainLoop); 
+     });
   };
-    function playMusic(){
+
+  function playMusic(){
 	  assets.bgSound.play();
   }
   
   function playSound(sound){
-	sound.play();
+	 sound.play();
   }
   
 
   //our GameFramework returns a public API visible from outside its scope
   return {
     start: start,
-	playMusic : playMusic
+    playMusic : playMusic
   };
 };
 
