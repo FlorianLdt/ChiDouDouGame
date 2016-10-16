@@ -8,10 +8,10 @@ window.onload = function init() {
 };
 
 audioID = 0;
+ var assets = {};
 
 var bgSound;
 var gameOverSound;
-var beanPopSound;
 var eatingSound;
 
 // GAME FRAMEWORK STARTS HERE
@@ -30,30 +30,8 @@ var GF = function(){
     credits: 5
   };
 
-  function sound(src) {
-    this.sound = document.createElement("audio");
-    var bgdsound = document.querySelector(".audio0");
-    this.sound.src = src;
-    this.sound.className = "audio"+audioID;
-    this.sound.setAttribute("preload", "auto");
-    this.sound.setAttribute("controls", "none");
-    
-    if (audioID===0){
-      this.sound.volume = 0.1;
-      this.sound.setAttribute("loop", "true");
-    }
-    
-    this.sound.style.display = "none";
-    document.body.appendChild(this.sound);
-    
-    this.play = function(){
-        this.sound.play();
-    }
-    
-    this.stop = function(){
-      this.sound.pause();
-    }
-  }
+
+ 
 
   // Let's begin with the startMenu
   currentState = states.startMenu;
@@ -83,9 +61,15 @@ var GF = function(){
   function clearCanvas() {
     ctx.clearRect(0, 0, w, h);
   }
-
   
-
+  function allAssetsLoaded(assetsLoaded) {
+        console.log("all samples loaded and decoded");
+        for (var asset in assetsLoaded) {
+            //console.log("assets[" + asset + "] = " + assetsLoaded[asset]);
+            assets[asset] = assetsLoaded[asset];
+        }
+    }
+  
   // Main Loop of the game
   var mainLoop = function(time){
     // Clear the canvas
@@ -167,17 +151,17 @@ var GF = function(){
 
         // number of ms since last frame draw
         delta = timer(time);
+        
         panda = new Panda(w,h);
-      
         updatePlayer();
         ctx.fillStyle = "white";
         ctx.font = "15px Consolas";
         ctx.fillText("SCORE: " +currentScore, 500, 20);
         // Check inputs and move the eater
-        updatePanda(panda);
+        updatePanda(panda,assets.pandaImage);
 
         // update and draw balls
-        updateBalls(delta,panda);
+        updateBalls(delta,panda, assets);
       break;
       //////////////////////////////////////////////////////////
           
@@ -309,7 +293,7 @@ var GF = function(){
           if(inputStates.keyN) {
             currentScore = 0;
             ballArray = [];
-      frequenceBalles =200;
+      frequenceBalles =150;
             lancerBalles();
             currentState = states.play;
           } else if(inputStates.keyH) {
@@ -326,7 +310,7 @@ var GF = function(){
 
   
 
-  function updateBalls(delta,panda) {
+  function updateBalls(delta,panda, assets) {
     
      compteurFrame ++;
   // for each ball in the array
@@ -343,17 +327,17 @@ var GF = function(){
       checkCollisions(ball,panda);
 
       // 3) draw the ball
-      ball.draw(ctx);
+      ball.draw(ctx, assets.beanImage);
     }
   } 
 
-  function updatePanda(panda){
+  function updatePanda(panda, pandaImage){
 
     panda.move(delta,inputStates);
-    panda.draw(ctx);
-  }
+    panda.draw(ctx, pandaImage);
 
-    
+  }
+ 
   function updatePlayer() {
   // The player is just a circle, drawn at the mouse position
   // Just to test circle/circle collision.
@@ -361,9 +345,8 @@ var GF = function(){
     if(inputStates.mousePos) {
       player.x = inputStates.mousePos.x;
       player.y = inputStates.mousePos.y;
-      leaveImage = new Image();
-      leaveImage.src="assets/images/leave.png";
-      ctx.drawImage(leaveImage,player.x-20, player.y-20, 40, 40);
+
+      ctx.drawImage(assets.leaveImage,player.x-20, player.y-20, 40, 40);
     }
   }
 
@@ -396,13 +379,11 @@ var GF = function(){
       if (v3<= 196 && v3 >=165){
         ctx.strokeStyle = ctx.fillStyle = 'green';
         //ctx.fillText("BINGO", 10, 40);
-        eatingSound = new sound("assets/sounds/eatingSound.mp3");
-        eatingSound.play();
+        playSound(assets.eatingSound);
         removeBallAndGenerateNew(ball);
         currentScore++;
       } else {
-        gameOverSound = new sound("assets/sounds/gameOverSound.wav");
-        gameOverSound.play();
+        playSound(assets.gameOverSound);
         ball.color = 'red';
         panda.dead = true;
 
@@ -438,10 +419,7 @@ var GF = function(){
       if (compteurFrame % frequenceBalles == 0){
           console.log("dead")
       
-          var ball =  new Ball(w,h,ballSpeed); 
-          
-          //beanPopSound = new sound("assets/sounds/beanPopSound.wav");
-          //beanPopSound.play();
+          var ball =  new Ball(w,h,ballSpeed);
         
         if(!circleCollide(ball.x, ball.y, ball.boundingCircleRadius,panda.x, panda.y, panda.boundingCircleRadius)) {
           // On la rajoute au tableau
@@ -518,25 +496,19 @@ var GF = function(){
       ballSpeed = 5;
     } 
     createBalls(1, ballSpeed, panda);     
-  }    
+  } 
     
 
   var start = function(){
     // adds a div for displaying the fps value
     initCounter();
-
     // Canvas, context etc.
     canvas = document.querySelector("#myCanvas");
-    bgSound = new sound("assets/sounds/bgSound.mp3");
-    audioID++;
-    bgSound.play();
     // often useful
     w = canvas.width; 
     h = canvas.height; 
 
     
-          
-
     // important, we will draw with this object
     ctx = canvas.getContext('2d');
     // default police for text
@@ -544,21 +516,34 @@ var GF = function(){
     addListeners(inputStates, canvas);
 
     // We create tge balls: try to change the parameter
-    if(states.play){
+    /*if(states.play){
       var panda = new Panda(w,h);
-        panda.draw(ctx);
+      console.log(assets.pandaImage);
+        panda.draw(ctx,assets.pandaImage);
       createBalls(1, 2, panda); 
 
-    }
-          
-
-    // start the animation
-      requestAnimationFrame(mainLoop);
+    }*/
+	
+		  loadAssets(function (assets) {
+            // all assets (images, sounds) loaded, we can start the animation
+		   allAssetsLoaded(assets);
+           playMusic();
+           requestAnimationFrame(mainLoop); 
+        });
   };
+    function playMusic(){
+	  assets.bgSound.play();
+  }
+  
+  function playSound(sound){
+	sound.play();
+  }
+  
 
   //our GameFramework returns a public API visible from outside its scope
   return {
-    start: start
+    start: start,
+	playMusic : playMusic
   };
 };
 

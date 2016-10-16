@@ -1,8 +1,3 @@
-function randomBall(){
-  var i = Math.floor(7*Math.random());
-  var ballsrc = "assets/images/bean"+i+".png";
-  return ballsrc;
-}
 
   // constructor function for balls
   function Ball(w,h,speedBall) {
@@ -10,9 +5,6 @@ function randomBall(){
    this.boundingCircleRadius = 30/2;
    this.color = "black";
    this.dead = false;
-   this.image = new Image();
-   this.image.src= randomBall();
-   console.log(this.v);
     
 
   /*
@@ -68,16 +60,15 @@ function randomBall(){
 
 
     
-    this.draw = function(ctx) {
+    this.draw = function(ctx, beanImage) {
       // si la balle est "morte" on ne fait rien
       if(this.dead) return;
-      
       ctx.save();
       ctx.beginPath();
       ctx.fillStyle = this.color;
       //ctx.arc(this.x, this.y, this.boundingCircleRadius, 0, 2*Math.PI);
       ctx.fill();
-      ctx.drawImage(this.image,this.x-15, this.y-15);
+      ctx.drawImage(beanImage,this.x-15, this.y-15);
       ctx.restore();
       //ctx.fillText("Ball : (x: " + this.x + ",y: " + this.y +")", 10, 580);
       this.color = 'white';

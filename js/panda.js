@@ -7,15 +7,14 @@ function Panda(w,h) {
     this.hole = 50,
     this.angle = 0
     this.dead = false;
- 
-  	this.draw = function(ctx) {
+
+  	this.draw = function(ctx, pandaImage) {
     // save the context
     
     ctx.save();
     ctx.translate( this.x, this.y );
     ctx.rotate( this.angle );
-    frogImage = new Image();
-    frogImage.src="assets/images/panda.png";
+    
     // Draw bounding circle
     ctx.beginPath();
     ctx.strokeStyle = "red";
@@ -34,7 +33,8 @@ function Panda(w,h) {
     
     ctx.lineWidth = 5;
     ctx.stroke();
-    ctx.drawImage(frogImage,-80, -80, 162, 162);
+    
+    ctx.drawImage(pandaImage,-80, -80, 162, 162);
     // restore the context
     ctx.restore(); 
   }
